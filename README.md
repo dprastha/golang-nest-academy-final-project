@@ -23,3 +23,9 @@
 ## ERD
 
 https://dbdiagram.io/d/63574deefa2755667d653c2b
+
+## Created by kelompok 4
+
+- Muhammad Inayatulloh - @ainmtsn1999
+- Oxicusa Gugi Housman - @OxiCuza
+- Daniel Prastha Andika - @dprastha
