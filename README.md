@@ -9,6 +9,7 @@
 - Go
 - Gin
 - GORM
+- MySQL
 
 ## Installation
 
@@ -18,8 +19,6 @@
 - `go run main.go`
 
 ## API Documentation
-
-https://documenter.getpostman.com/view/13334944/UVyuRa5j
 
 ## ERD
 
