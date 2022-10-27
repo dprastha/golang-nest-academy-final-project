@@ -2,6 +2,7 @@ package params
 
 import (
 	"errors"
+	"final-project/server/model"
 
 	"github.com/go-playground/validator/v10"
 )
@@ -27,4 +28,12 @@ func Validate(u interface{}) error {
 	}
 
 	return errors.New(errString)
+}
+
+func (u *UserRegister) ParseToModel() *model.User {
+	return &model.User{
+		Fullname: u.Fullname,
+		Email:    u.Email,
+		Password: u.Password,
+	}
 }
