@@ -20,6 +20,7 @@ CREATE TABLE `products` (
   `desc` varchar(255),
   `price` int,
   `stock` int,
+  `weight` int,
   `img_url` varchar(255),
   `created_at` timestamp,
   `updated_at` timestamp
@@ -28,24 +29,20 @@ CREATE TABLE `products` (
 CREATE TABLE `transactions` (
   `id` varchar(255) PRIMARY KEY,
   `user_id` varchar(255),
+  `product_id` varchar(255),
   `origin` varchar(255),
   `destination` varchar(255),
+  `quantity` int,
   `weight` int,
+  `total_price` int,
   `courier` varchar(255),
+  `courier_cost` double,
   `status` varchar(255),
+  `estimation_arrived` varchar(255),
   `created_at` timestamp,
   `updated_at` timestamp
 );
 
-CREATE TABLE `items` (
-  `id` varchar(255) PRIMARY KEY,
-  `transaction_id` varchar(255),
-  `product_id` varchar(255),
-  `quantity` int
-);
-
 ALTER TABLE `transactions` ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
-ALTER TABLE `items` ADD FOREIGN KEY (`transaction_id`) REFERENCES `transactions` (`id`);
-
-ALTER TABLE `items` ADD FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
+ALTER TABLE `transactions` ADD FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
