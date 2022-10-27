@@ -1,14 +1,14 @@
 CREATE TABLE `users` (
   `id` varchar(255) PRIMARY KEY,
-  `fullname` varchar(255),
+  `fullname` varchar(255) NOT NULL,
   `gender` varchar(255),
   `contact` varchar(255),
   `street` varchar(255),
   `city_id` varchar(255),
   `province_id` varchar(255),
-  `email` varchar(255),
-  `password` varchar(255),
-  `role` varchar(255),
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `role` varchar(255) DEFAULT "user",
   `created_at` timestamp,
   `updated_at` timestamp
 );
