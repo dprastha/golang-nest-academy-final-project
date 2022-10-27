@@ -17,6 +17,19 @@ func NewProductRepo(db *gorm.DB) productRepo {
 	}
 }
 
+func (p *productRepo) GetAllProductsWithPagi(pagination model.Pagination) (*[]model.Product, error) {
+	var product []model.Product
+
+	offset := (pagination.Page - 1) * pagination.Limit
+
+	err := p.db.Limit(pagination.Limit).Offset(offset).Find(&product).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &product, nil
+}
+
 func (p *productRepo) GetAllProducts() (*[]model.Product, error) {
 	var product []model.Product
 
