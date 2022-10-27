@@ -1,8 +1,10 @@
 package main
 
 import (
+	"final-project/config"
 	"final-project/db"
 	"final-project/server"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,6 +18,7 @@ func main() {
 
 	router := gin.Default()
 	app := server.NewRouter(router)
+	port := fmt.Sprintf(":%s", config.GetEnvVariable("APP_PORT"))
 
-	app.Start(":8080")
+	app.Start(port)
 }

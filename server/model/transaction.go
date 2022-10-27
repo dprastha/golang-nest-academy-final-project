@@ -2,10 +2,15 @@ package model
 
 type Transaction struct {
 	BaseModel
-	UserId      int32  `json:"user_id"`
-	Origin      string `json:"origin"`
-	Destination string `json:"destination"`
-	Weight      int32  `json:"weight"`
-	Courier     string `json:"courier"`
-	Status      string `json:"status"`
+	UserId      string  `json:"user_id"`
+	ProductId   string  `json:"product_id"`
+	Origin      string  `json:"origin"`
+	Destination string  `json:"destination"`
+	Quantity    int32   `json:"quantity"`
+	Weight      int32   `json:"weight"`
+	TotalPrice  int32   `json:"total_price"`
+	Courier     string  `json:"courier"`
+	CourierCost float32 `json:"courier_cost"`
+	EstArrived  string  `json:"estimation_arrived"`
+	Status      string  `json:"status"`
 }

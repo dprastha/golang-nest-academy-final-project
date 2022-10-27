@@ -8,7 +8,7 @@ type User struct {
 	Gender     string `json:"gender"`
 	Contact    string `json:"contact"`
 	Street     string `json:"street"`
-	CityId     int32  `json:"city_id"`
-	ProvinceId int32  `json:"province_id"`
+	CityId     string `json:"city_id"`
+	ProvinceId string `json:"province_id"`
 	Role       string `json:"role"`
 }
