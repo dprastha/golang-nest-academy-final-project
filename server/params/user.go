@@ -10,11 +10,13 @@ type User struct {
 	Gender     string `validate:"required"`
 	Contact    string `validate:"required"`
 	Street     string `validate:"required"`
-	CityId     int32  `validate:"required"`
-	ProvinceId int32  `validate:"required"`
+	CityId     string `validate:"required"`
+	ProvinceId string `validate:"required"`
 }
 
 func (u *User) ParseToModel() (*model.User, error) {
+	//TODO: validate province and city id is available in raja ongkir
+
 	var validate *validator.Validate
 
 	user := &model.User{
