@@ -1,8 +1,6 @@
 package view
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -27,7 +25,7 @@ var ErrMap = map[string]interface{}{
 
 func SuccessResponse(msg string, statusCode int) *Response {
 	return &Response{
-		Status:      http.StatusOK,
+		Status:      statusCode,
 		Message:     msg,
 		GeneralInfo: "Golang-4-Shop",
 	}
