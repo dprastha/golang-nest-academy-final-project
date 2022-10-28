@@ -25,6 +25,9 @@ func (r *Router) Start(port string) {
 	auth := r.router.Group("/auth")
 	auth.POST("/register", r.user.Register)
 
+	user := r.router.Group("/users")
+	user.POST("/", r.user.Create)
+
 	product := r.router.Group("/products")
 	product.GET("/", r.product.GetAllProducts)
 	product.GET("/id/:id", r.product.GetProductById)

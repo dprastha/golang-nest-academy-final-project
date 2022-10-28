@@ -8,12 +8,12 @@ import (
 )
 
 type User struct {
-	FullName   string `validate:"required"`
-	Gender     string `validate:"required"`
-	Contact    string `validate:"required"`
-	Street     string `validate:"required"`
-	CityId     string `validate:"required"`
-	ProvinceId string `validate:"required"`
+	Fullname   string `json:"fullname" validate:"required,min=3,max=50"`
+	Gender     string `json:"gender" validate:"required"`
+	Contact    string `json:"contact" validate:"required"`
+	Street     string `json:"street" validate:"required"`
+	CityId     string `json:"city_id" validate:"required"`
+	ProvinceId string `json:"province_id" validate:"required"`
 }
 
 type UserRegister struct {
@@ -49,22 +49,13 @@ func (u *UserRegister) ParseToModel() *model.User {
 }
 
 func (u *User) ParseToModelUser() (*model.User, error) {
-	//TODO: validate province and city id is available in raja ongkir
-
-	var validate *validator.Validate
-
 	user := &model.User{
-		FullName:   u.FullName,
+		Fullname:   u.Fullname,
 		Gender:     u.Gender,
 		Contact:    u.Contact,
 		Street:     u.Street,
 		CityId:     u.CityId,
 		ProvinceId: u.ProvinceId,
-	}
-
-	err := validate.Struct(user)
-	if err != nil {
-		return nil, err
 	}
 
 	return user, nil
