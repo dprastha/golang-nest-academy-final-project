@@ -15,3 +15,7 @@ type ProductRepo interface {
 	UpdateProduct(productId string, product *model.Product) error
 	DeleteProduct(productId string) error
 }
+
+type TransactionRepo interface {
+	
+}
