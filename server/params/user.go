@@ -8,10 +8,10 @@ import (
 )
 
 type UserRegister struct {
-	Fullname string `validate:"required"`
-	Email    string `validate:"required"`
-	Password string `validate:"required"`
-	Role     string
+	Fullname string `json:"fullname" validate:"required"`
+	Email    string `json:"email" validate:"required"`
+	Password string `json:"password" validate:"required"`
+	Role     string `json:"role"`
 }
 
 func Validate(u interface{}) error {
