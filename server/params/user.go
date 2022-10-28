@@ -14,6 +14,11 @@ type UserRegister struct {
 	Role     string `json:"role"`
 }
 
+type UserLogin struct {
+	Email    string `validate:"required"`
+	Password string `validate:"required"`
+}
+
 func Validate(u interface{}) error {
 	err := validator.New().Struct(u)
 
