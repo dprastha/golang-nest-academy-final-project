@@ -19,15 +19,16 @@ func Validate(u interface{}) error {
 
 	if err != nil {
 		panic(err)
+
+		validateErrors := err.(validator.ValidationErrors)
+		errString := ""
+		for _, err := range validateErrors {
+			errString += err.Field() + " is " + err.Tag()
+		}
+		return errors.New(errString)
 	}
 
-	validateErrors := err.(*validator.ValidationErrors)
-	errString := ""
-	for _, err := range *validateErrors {
-		errString += err.Field() + " is " + err.Tag()
-	}
-
-	return errors.New(errString)
+	return nil
 }
 
 func (u *UserRegister) ParseToModel() *model.User {

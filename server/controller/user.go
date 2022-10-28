@@ -19,7 +19,7 @@ func NewUserHandler(service *service.UserService) *UserHandler {
 	}
 }
 
-func (u *UserHandler) GinRegister(c *gin.Context) {
+func (u *UserHandler) Register(c *gin.Context) {
 	var req params.UserRegister
 	err := c.ShouldBindJSON(&req)
 	if err != nil {

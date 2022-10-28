@@ -21,7 +21,7 @@ func NewRouter(router *gin.Engine, user *controller.UserHandler) *Router {
 func (r *Router) Start(port string) {
 	// Auth route
 	auth := r.router.Group("/auth")
-	auth.POST("/register", r.user.GinRegister)
+	auth.POST("/register", r.user.Register)
 
 	r.router.Run(port)
 }
