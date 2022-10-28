@@ -19,7 +19,7 @@ var (
 
 func ConnectDB() (*gorm.DB, error) {
 	dsn := fmt.Sprintf(
-		"%s:%s@tcp(%s:%s)/%s",
+		"%s:%s@tcp(%s:%s)/%s?parseTime=true",
 		DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_NAME,
 	)
 

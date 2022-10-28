@@ -8,5 +8,5 @@ type Product struct {
 	Weight   int32  `json:"weight"`
 	Price    int32  `json:"price"`
 	Stock    int32  `json:"stock"`
-	ImageUrl string `json:"image_url"`
+	ImgUrl   string `json:"img_url"`
 }
