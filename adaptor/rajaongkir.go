@@ -75,3 +75,22 @@ func (r *RajaOngkirAdaptor) GetProvince(provincecode string) (*JSONRecordGet, er
 
 	return &datas.Rajaongkir, err
 }
+
+func (r *RajaOngkirAdaptor) PostCost(payload interface{}) (*JSONRecordPost, error) {
+	path := "cost"
+	data, err := r.client.Post(path, payload)
+
+	if err != nil {
+		return nil, err
+	}
+	var datas JSONBasePost
+
+	err = json.Unmarshal(data, &datas)
+	if err != nil {
+		return nil, err
+	}
+
+	//fmt.Println(datas)
+
+	return &datas.Rajaongkir, err
+}
