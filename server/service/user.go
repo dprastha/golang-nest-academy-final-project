@@ -6,6 +6,7 @@ import (
 	"final-project/server/params"
 	"final-project/server/repository"
 	"final-project/server/view"
+	"log"
 	"net/http"
 	"time"
 
@@ -79,4 +80,26 @@ func (u *UserService) FindUserByEmail(email string) *view.Response {
 	}
 
 	return view.SuccessResponse("Succes find user", user, http.StatusOK)
+}
+
+func (u *UserService) CreateUser(request *params.User) *view.Response {
+	user, err := request.ParseToModelUser()
+	if err != nil {
+		log.Printf("Error when casting request to user model %v\n", err)
+		return view.ErrorResponse("CREATED_USER_FAIL", "BAD_REQUEST", http.StatusBadRequest)
+	}
+
+	user.Id = uuid.NewString()
+	user.CreatedAt = time.Now()
+	user.UpdatedAt = time.Now()
+	// TODO: change to dynamic
+	user.Role = "user"
+
+	err = u.repo.Register(user)
+	if err != nil {
+		log.Printf("Error when create in repository to user model %v\n", err)
+		return view.ErrorResponse("CREATED_USER_FAIL", "BAD_REQUEST", http.StatusBadRequest)
+	}
+
+	return view.SuccessResponse("CREATED_USER_SUCCESS", user, http.StatusCreated)
 }

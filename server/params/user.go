@@ -7,6 +7,15 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
+type User struct {
+	Fullname   string `json:"fullname" validate:"required,min=3,max=50"`
+	Gender     string `json:"gender" validate:"required"`
+	Contact    string `json:"contact" validate:"required"`
+	Street     string `json:"street" validate:"required"`
+	CityId     string `json:"city_id" validate:"required"`
+	ProvinceId string `json:"province_id" validate:"required"`
+}
+
 type UserRegister struct {
 	Fullname string `json:"fullname" validate:"required"`
 	Email    string `json:"email" validate:"required"`
@@ -42,4 +51,17 @@ func (u *UserRegister) ParseToModel() *model.User {
 		Email:    u.Email,
 		Password: u.Password,
 	}
+}
+
+func (u *User) ParseToModelUser() (*model.User, error) {
+	user := &model.User{
+		Fullname:   u.Fullname,
+		Gender:     u.Gender,
+		Contact:    u.Contact,
+		Street:     u.Street,
+		CityId:     u.CityId,
+		ProvinceId: u.ProvinceId,
+	}
+
+	return user, nil
 }

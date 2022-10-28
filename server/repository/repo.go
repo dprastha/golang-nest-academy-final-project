@@ -3,8 +3,15 @@ package repository
 import "final-project/server/model"
 
 type UserRepo interface {
+	// Auth
 	Register(user *model.User) error
 	FindUserByEmail(email string) (*model.User, error)
+
+	// Users
+	//GetUsers(page int, limit int) (*[]model.User, error)
+	//DetailUserById(id int32) (*model.User, error)
+	//DetailUserByEmail(email string) (*model.User, error)
+	//EditUser(id int32) (*model.User, error)
 }
 
 type ProductRepo interface {
