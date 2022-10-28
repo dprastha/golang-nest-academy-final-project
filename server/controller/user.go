@@ -24,17 +24,17 @@ func (u *UserHandler) Register(c *gin.Context) {
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
 		resp := view.ErrorResponse("Invalid Request", "BAD_REQUEST", http.StatusBadRequest)
-		WriteJsonResponseGin(c, resp)
+		WriteJsonResponse(c, resp)
 		return
 	}
 
 	err = params.Validate(req)
 	if err != nil {
 		resp := view.ErrorResponse("Invalid Request", "BAD_REQUEST", http.StatusBadRequest)
-		WriteJsonResponseGin(c, resp)
+		WriteJsonResponse(c, resp)
 		return
 	}
 
 	resp := u.service.Register(&req)
-	WriteJsonResponseGin(c, resp)
+	WriteJsonResponse(c, resp)
 }

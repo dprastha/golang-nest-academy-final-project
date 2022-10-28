@@ -20,11 +20,15 @@ func main() {
 	}
 
 	userRepo := repository.NewUserRepo(db)
-	userService := service.NewService(userRepo)
+	userService := service.NewUserServices(userRepo)
 	userHandler := controller.NewUserHandler(userService)
 
+	productRepo := repository.NewProductRepo(db)
+	productService := service.NewProductServices(productRepo)
+	productHandler := controller.NewProductHandler(productService)
+
 	router := gin.Default()
-	app := server.NewRouter(router, userHandler)
+	app := server.NewRouter(router, userHandler, productHandler)
 	port := fmt.Sprintf(":%s", config.GetEnvVariable("APP_PORT"))
 
 	app.Start(port)

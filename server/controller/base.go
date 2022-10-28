@@ -6,10 +6,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func WriteJsonResponseGin(c *gin.Context, payload *view.Response) {
+func WriteJsonResponse(c *gin.Context, payload *view.Response) {
 	c.JSON(payload.Status, payload)
 }
 
-func WriteErrorJsonResponseGin(c *gin.Context, payload *view.Response) {
+func WriteErrorJsonResponse(c *gin.Context, payload *view.Response) {
 	c.AbortWithStatusJSON(payload.Status, payload)
 }
