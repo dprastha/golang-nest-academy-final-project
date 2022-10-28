@@ -7,16 +7,18 @@ import (
 )
 
 type Router struct {
-	router  *gin.Engine
-	user    *controller.UserHandler
-	product *controller.ProductHandler
+	router      *gin.Engine
+	user        *controller.UserHandler
+	product     *controller.ProductHandler
+	transaction *controller.TranscationHandler
 }
 
-func NewRouter(router *gin.Engine, user *controller.UserHandler, product *controller.ProductHandler) *Router {
+func NewRouter(router *gin.Engine, user *controller.UserHandler, product *controller.ProductHandler, transaction *controller.TranscationHandler) *Router {
 	return &Router{
-		router:  router,
-		user:    user,
-		product: product,
+		router:      router,
+		user:        user,
+		product:     product,
+		transaction: transaction,
 	}
 }
 
