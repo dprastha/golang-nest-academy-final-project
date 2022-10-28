@@ -23,10 +23,11 @@ var ErrMap = map[string]interface{}{
 	"INTERNAL_SERVER_ERROR": gin.H{"message": "internal server error"},
 }
 
-func SuccessResponse(msg string, statusCode int) *Response {
+func SuccessResponse(msg string, payload interface{}, statusCode int) *Response {
 	return &Response{
 		Status:      statusCode,
 		Message:     msg,
+		Payload:     payload,
 		GeneralInfo: "Golang-4-Shop",
 	}
 }
