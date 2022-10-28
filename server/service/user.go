@@ -26,6 +26,11 @@ func NewUserServices(repo repository.UserRepo) *UserService {
 func (u *UserService) Register(req *params.UserRegister) *view.Response {
 	user := req.ParseToModel()
 
+	registeredEmail, _ := u.repo.FindUserByEmail(req.Email)
+	if registeredEmail != nil {
+		return view.ErrorResponse("Email already registered", "UNPROCESSABLE_ENTITY", http.StatusUnprocessableEntity)
+	}
+
 	user.Id = uuid.NewString()
 	user.CreatedAt = time.Now()
 	user.UpdatedAt = time.Now()

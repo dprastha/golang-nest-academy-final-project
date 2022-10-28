@@ -19,7 +19,7 @@ var ErrMap = map[string]interface{}{
 	"FORBIDDEN_ACCESS":      gin.H{"message": "you dont have access for this resources"},
 	"UNAUTHORIZED":          gin.H{"message": "you need to login for access this resources"},
 	"NOT_FOUND":             gin.H{"message": "data not found in this resources"},
-	"UNPROCESSABLE_ENTITY":  gin.H{"message": "stock prodcut not enough"},
+	"UNPROCESSABLE_ENTITY":  gin.H{"message": "unprocessable entity"},
 	"INTERNAL_SERVER_ERROR": gin.H{"message": "internal server error"},
 }
 
