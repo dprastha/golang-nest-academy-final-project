@@ -4,6 +4,7 @@ import "final-project/server/model"
 
 type UserRepo interface {
 	Register(user *model.User) error
+	FindUserByEmail(email string) (*model.User, error)
 }
 
 type ProductRepo interface {

@@ -19,22 +19,35 @@ func NewUserHandler(service *service.UserService) *UserHandler {
 	}
 }
 
-func (u *UserHandler) Register(c *gin.Context) {
+func (u *UserHandler) Register(ctx *gin.Context) {
 	var req params.UserRegister
-	err := c.ShouldBindJSON(&req)
+	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
 		resp := view.ErrorResponse("Invalid Request", "BAD_REQUEST", http.StatusBadRequest)
-		WriteJsonResponse(c, resp)
+		WriteJsonResponse(ctx, resp)
 		return
 	}
 
 	err = params.Validate(req)
 	if err != nil {
 		resp := view.ErrorResponse("Invalid Request", "BAD_REQUEST", http.StatusBadRequest)
-		WriteJsonResponse(c, resp)
+		WriteJsonResponse(ctx, resp)
 		return
 	}
 
 	resp := u.service.Register(&req)
-	WriteJsonResponse(c, resp)
+	WriteJsonResponse(ctx, resp)
+}
+
+func (u *UserHandler) Login(ctx *gin.Context) {
+	var req params.UserLogin
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		resp := view.ErrorResponse("Invalid Request", "BAD_REQUEST", http.StatusBadRequest)
+		WriteJsonResponse(ctx, resp)
+		return
+	}
+
+	resp := u.service.Login(&req)
+	WriteJsonResponse(ctx, resp)
 }
