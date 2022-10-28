@@ -5,6 +5,7 @@ import "final-project/server/model"
 type UserRepo interface {
 	// Auth
 	Register(user *model.User) error
+	FindUserByEmail(email string) (*model.User, error)
 
 	// Users
 	//GetUsers(page int, limit int) (*[]model.User, error)
