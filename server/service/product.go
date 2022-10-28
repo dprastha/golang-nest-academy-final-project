@@ -66,7 +66,7 @@ func (p *ProductService) CreateProduct(req *params.ProductReq) *view.Response {
 		return view.ErrorResponse("CREATE_PRODUCT_FAIL", "INTERNAL_SERVER_ERROR", http.StatusInternalServerError)
 	}
 
-	return view.SuccessResponse("CREATE_PRODUCT_SUCCESS")
+	return view.SuccessResponse("CREATE_PRODUCT_SUCCESS", product, http.StatusCreated)
 }
 
 func (p *ProductService) UpdateProduct(productId string, req *params.ProductReq) *view.Response {
@@ -77,7 +77,7 @@ func (p *ProductService) UpdateProduct(productId string, req *params.ProductReq)
 		return view.ErrorResponse("UPDATE_PRODUCT_FAIL", "INTERNAL_SERVER_ERROR", http.StatusInternalServerError)
 	}
 
-	return view.SuccessResponse("UPDATE_PRODUCT_SUCCESS")
+	return view.SuccessResponse("UPDATE_PRODUCT_SUCCESS", product, http.StatusAccepted)
 }
 
 func (p *ProductService) DeleteProduct(produtId string) *view.Response {
@@ -86,5 +86,6 @@ func (p *ProductService) DeleteProduct(produtId string) *view.Response {
 	if err != nil {
 		return view.ErrorResponse("DELETE_PRODUCT_FAIL", "INTERNAL_SERVER_ERROR", http.StatusInternalServerError)
 	}
-	return view.SuccessResponse("DELETE_PRODUCT_SUCCESS")
+
+	return view.SuccessResponse("DELETE_PRODUCT_SUCCESS", nil, http.StatusNoContent)
 }

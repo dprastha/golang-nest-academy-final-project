@@ -2,7 +2,7 @@ package model
 
 type User struct {
 	BaseModel
-	FullName   string `json:"full_name"`
+	Fullname   string `json:"full_name"`
 	Email      string `json:"email"`
 	Password   string `json:"password"`
 	Gender     string `json:"gender"`

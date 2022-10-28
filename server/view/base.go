@@ -1,8 +1,6 @@
 package view
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,10 +23,11 @@ var ErrMap = map[string]interface{}{
 	"INTERNAL_SERVER_ERROR": gin.H{"message": "internal server error"},
 }
 
-func SuccessResponse(msg string) *Response {
+func SuccessResponse(msg string, payload interface{}, statusCode int) *Response {
 	return &Response{
-		Status:      http.StatusOK,
+		Status:      statusCode,
 		Message:     msg,
+		Payload:     payload,
 		GeneralInfo: "Golang-4-Shop",
 	}
 }

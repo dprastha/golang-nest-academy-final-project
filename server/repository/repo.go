@@ -2,6 +2,10 @@ package repository
 
 import "final-project/server/model"
 
+type UserRepo interface {
+	Register(user *model.User) error
+}
+
 type ProductRepo interface {
 	GetAllProductsWithPagi(pagination model.Pagination) (*[]model.Product, error)
 	GetAllProducts() (*[]model.Product, error)

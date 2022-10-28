@@ -8,17 +8,22 @@ import (
 
 type Router struct {
 	router  *gin.Engine
+	user    *controller.UserHandler
 	product *controller.ProductHandler
 }
 
-func NewRouter(router *gin.Engine, product *controller.ProductHandler) *Router {
+func NewRouter(router *gin.Engine, user *controller.UserHandler, product *controller.ProductHandler) *Router {
 	return &Router{
 		router:  router,
+		user:    user,
 		product: product,
 	}
 }
 
 func (r *Router) Start(port string) {
+	// Auth route
+	auth := r.router.Group("/auth")
+	auth.POST("/register", r.user.Register)
 
 	product := r.router.Group("/products")
 	product.GET("/", r.product.GetAllProducts)

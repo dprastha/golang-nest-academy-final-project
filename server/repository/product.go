@@ -11,8 +11,8 @@ type productRepo struct {
 	db *gorm.DB
 }
 
-func NewProductRepo(db *gorm.DB) productRepo {
-	return productRepo{
+func NewProductRepo(db *gorm.DB) *productRepo {
+	return &productRepo{
 		db: db,
 	}
 }
