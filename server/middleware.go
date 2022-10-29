@@ -2,6 +2,7 @@ package server
 
 import (
 	"final-project/helper"
+	"final-project/server/controller"
 	"final-project/server/service"
 	"final-project/server/view"
 	"net/http"
@@ -22,11 +23,12 @@ func NewMiddleware(userService *service.UserService) *Middleware {
 
 func (m *Middleware) Auth(ctx *gin.Context) {
 	bearerToken := ctx.GetHeader("Authorization")
-	tokenArr := strings.Split(bearerToken, "Bearer")
+	tokenArr := strings.Split(bearerToken, "Bearer ")
 
 	if len(tokenArr) != 2 {
 		ctx.Set("ERROR", "no token")
-		view.ErrorResponse("No token provided", "UNAUTHORIZED", http.StatusUnauthorized)
+		resp := view.ErrorResponse("No token provided", "UNAUTHORIZED", http.StatusUnauthorized)
+		controller.WriteErrorJsonResponse(ctx, resp)
 		return
 	}
 
@@ -34,7 +36,8 @@ func (m *Middleware) Auth(ctx *gin.Context) {
 	token, err := helper.VerifyToken(tokenArr[1])
 	if err != nil {
 		ctx.Set("ERROR", err.Error())
-		view.ErrorResponse("No token provided", "UNAUTHORIZED", http.StatusUnauthorized)
+		resp := view.ErrorResponse("No token provided", "UNAUTHORIZED", http.StatusUnauthorized)
+		controller.WriteErrorJsonResponse(ctx, resp)
 		return
 	}
 

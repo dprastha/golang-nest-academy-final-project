@@ -31,21 +31,21 @@ func (r *Router) Start(port string) {
 	auth.POST("/login", r.user.Login)
 
 	// User route
-	user := r.router.Group("/users")
-	user.POST("/", r.user.Create, r.middleware.Auth)
-	user.GET("/", r.user.AllUsers, r.middleware.Auth)
+	user := r.router.Group("/users", r.middleware.Auth)
+	user.POST("/", r.user.Create)
+	user.GET("/", r.user.AllUsers)
 
 	// Product route
-	product := r.router.Group("/products")
-	product.GET("/", r.product.GetAllProducts, r.middleware.Auth)
-	product.GET("/id/:id", r.product.GetProductById, r.middleware.Auth)
-	product.POST("/", r.product.CreateProduct, r.middleware.Auth)
-	product.PUT("/id/:id", r.product.UpdateProduct, r.middleware.Auth)
-	product.DELETE("/id/:id", r.product.DeleteProduct, r.middleware.Auth)
+	product := r.router.Group("/products", r.middleware.Auth)
+	product.GET("/", r.product.GetAllProducts)
+	product.GET("/id/:id", r.product.GetProductById)
+	product.POST("/", r.product.CreateProduct)
+	product.PUT("/id/:id", r.product.UpdateProduct)
+	product.DELETE("/id/:id", r.product.DeleteProduct)
 
 	// Transaction route
-	transaction := r.router.Group("/transactions")
-	transaction.PUT("/id/:id", r.transaction.UpdateStatTransaction, r.middleware.Auth)
+	transaction := r.router.Group("/transactions", r.middleware.Auth)
+	transaction.PUT("/id/:id", r.transaction.UpdateStatTransaction)
 
 	r.router.Run(port)
 }

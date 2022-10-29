@@ -51,7 +51,7 @@ func VerifyToken(tokenString string) (*Token, error) {
 	})
 
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	// Check valid token
