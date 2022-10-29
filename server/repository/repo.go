@@ -10,7 +10,7 @@ type UserRepo interface {
 	// Users
 	GetUsers(page int, limit int) (*[]model.User, error)
 	DetailUserById(id string) (*model.User, error)
-	//EditUser(id int32) (*model.User, error)
+	EditUser(user *model.User, id string) error
 }
 
 type ProductRepo interface {
