@@ -11,14 +11,16 @@ type Router struct {
 	user        *controller.UserHandler
 	product     *controller.ProductHandler
 	transaction *controller.TransactionHandler
+	middleware  *Middleware
 }
 
-func NewRouter(router *gin.Engine, user *controller.UserHandler, product *controller.ProductHandler, transaction *controller.TransactionHandler) *Router {
+func NewRouter(router *gin.Engine, user *controller.UserHandler, product *controller.ProductHandler, transaction *controller.TransactionHandler, middleware *Middleware) *Router {
 	return &Router{
 		router:      router,
 		user:        user,
 		product:     product,
 		transaction: transaction,
+		middleware:  middleware,
 	}
 }
 
@@ -28,18 +30,21 @@ func (r *Router) Start(port string) {
 	auth.POST("/register", r.user.Register)
 	auth.POST("/login", r.user.Login)
 
-	user := r.router.Group("/users")
+	// User route
+	user := r.router.Group("/users", r.middleware.Auth)
 	user.POST("/", r.user.Create)
 	user.GET("/", r.user.AllUsers)
 
-	product := r.router.Group("/products")
+	// Product route
+	product := r.router.Group("/products", r.middleware.Auth)
 	product.GET("/", r.product.GetAllProducts)
 	product.GET("/id/:id", r.product.GetProductById)
 	product.POST("/", r.product.CreateProduct)
 	product.PUT("/id/:id", r.product.UpdateProduct)
 	product.DELETE("/id/:id", r.product.DeleteProduct)
 
-	transaction := r.router.Group("/transactions")
+	// Transaction route
+	transaction := r.router.Group("/transactions", r.middleware.Auth)
 	transaction.PUT("/id/:id", r.transaction.UpdateStatTransaction)
 
 	r.router.Run(port)

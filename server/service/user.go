@@ -67,8 +67,20 @@ func (u *UserService) Login(req *params.UserLogin) *view.Response {
 
 	err = helper.ValidatePassword(user.Password, req.Password)
 	if err != nil {
+		return view.ErrorResponse("Credential invalid", "UNAUTHORIZED", http.StatusUnauthorized)
+	}
+
+	tokenPayload := helper.Token{
+		UserId: user.Id,
+		Email:  user.Email,
+	}
+
+	tokenString, err := helper.GenerateToken(&tokenPayload)
+	if err != nil {
 		return view.ErrorResponse("Failed to login", "INTERNAL_SERVER_ERROR", http.StatusInternalServerError)
 	}
+
+	user.AccessToken = tokenString
 
 	return view.SuccessResponse("Succes login", user, http.StatusOK)
 }
