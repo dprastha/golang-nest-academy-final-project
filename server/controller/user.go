@@ -4,10 +4,11 @@ import (
 	"final-project/server/params"
 	"final-project/server/service"
 	"final-project/server/view"
-	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 type UserHandler struct {
@@ -29,10 +30,10 @@ func (u *UserHandler) Register(ctx *gin.Context) {
 		return
 	}
 
-	err = params.Validate(req)
+	errString, err := params.Validate(req)
 	if err != nil {
-		resp := view.ErrorResponse("Invalid Request", "BAD_REQUEST", http.StatusBadRequest)
-		WriteJsonResponse(ctx, resp)
+		resp := view.ErrorValidationUserResponse("Invalid Request", gin.H{"message": errString}, http.StatusBadRequest)
+		WriteErrorJsonResponse(ctx, resp)
 		return
 	}
 

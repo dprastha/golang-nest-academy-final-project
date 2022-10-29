@@ -1,7 +1,6 @@
 package params
 
 import (
-	"errors"
 	"final-project/server/model"
 	"reflect"
 	"strings"
@@ -30,31 +29,29 @@ type UpdateUser struct {
 
 type UserRegister struct {
 	Fullname string `json:"fullname" validate:"required"`
-	Email    string `json:"email" validate:"required"`
-	Password string `json:"password" validate:"required"`
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required,min=6"`
 	Role     string `json:"role"`
 }
 
 type UserLogin struct {
-	Email    string `validate:"required"`
-	Password string `validate:"required"`
+	Email    string `validate:"required,email"`
+	Password string `validate:"required,min=6"`
 }
 
-func Validate(u interface{}) error {
+func Validate(u interface{}) ([]string, error) {
 	err := validator.New().Struct(u)
 
 	if err != nil {
-		panic(err)
-
-		validateErrors := err.(validator.ValidationErrors)
-		errString := ""
-		for _, err := range validateErrors {
-			errString += err.Field() + " is " + err.Tag()
+		var errString []string
+		for _, err := range err.(validator.ValidationErrors) {
+			errString = append(errString, err.Field()+" is "+err.Tag())
 		}
-		return errors.New(errString)
+
+		return errString, err
 	}
 
-	return nil
+	return nil, nil
 }
 
 func (u *UserRegister) ParseToModel() *model.User {
