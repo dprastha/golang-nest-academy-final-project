@@ -141,3 +141,19 @@ func (u *UserService) GetUsers(page int, limit int) *view.Response {
 
 	return view.SuccessAllUsersResponse(query, payload)
 }
+
+func (u *UserService) ShowUserByEmail(email string) *view.Response {
+	user, err := u.repo.FindUserByEmail(email)
+	if err == gorm.ErrRecordNotFound {
+		log.Printf("Error when try to get user by email %v\n", err)
+		return view.ErrorResponse("GET_USER_BY_EMAIL_FAIL", "NOT_FOUND", http.StatusNotFound)
+	}
+
+	payload, err := view.NewUsers(user, &u.rajaOngkir)
+	if err != nil {
+		log.Printf("Error when try to hit raja ongkir in service show user by email %v\n", err)
+		return view.ErrorResponse("GET_USER_BY_EMAIL_FAIL", "INTERNAL_SERVER_ERROR", http.StatusInternalServerError)
+	}
+
+	return view.SuccessResponse("GET_USER_BY_EMAIL_SUCCESS", payload, http.StatusOK)
+}

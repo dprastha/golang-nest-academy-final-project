@@ -9,8 +9,7 @@ type UserRepo interface {
 
 	// Users
 	GetUsers(page int, limit int) (*[]model.User, error)
-	//DetailUserById(id int32) (*model.User, error)
-	//DetailUserByEmail(email string) (*model.User, error)
+	DetailUserById(id string) (*model.User, error)
 	//EditUser(id int32) (*model.User, error)
 }
 

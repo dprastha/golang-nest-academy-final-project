@@ -56,3 +56,8 @@ func (u *userRepo) GetUsers(page int, limit int) (*[]model.User, error) {
 
 	return &users, nil
 }
+
+func (u *userRepo) DetailUserById(id string) (*model.User, error) {
+	//TODO : if JWT include id user
+	return nil, nil
+}
