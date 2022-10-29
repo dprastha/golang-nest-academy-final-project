@@ -3,6 +3,7 @@ package params
 import (
 	"errors"
 	"final-project/server/model"
+	"time"
 
 	"github.com/go-playground/validator/v10"
 )
@@ -14,8 +15,41 @@ type InquireTransactions struct {
 	Weight      int    `json:"weight"`
 	TotalPrice  int    `json:"total_price"`
 	Courier     string `json:"courier"`
-	Status      string `json:"status"`
-	EstArrived  string `json:"estimation_arrived"`
+}
+
+type ConfirmTransaction struct {
+	ProductId   string         `json:"product_id"`
+	Quantity    int            `json:"quantity"`
+	Destination string         `json:"destination"`
+	Weight      int            `json:"weight"`
+	TotalPrice  int            `json:"total_price"`
+	Courier     ConfirmCourier `json:"courier"`
+}
+
+type ConfirmCourier struct {
+	Code       string `json:"code"`
+	Service    string `json:"service"`
+	Cost       int    `json:"cost"`
+	Estimation string `json:"estimation"`
+}
+
+func (t *ConfirmTransaction) ParseToModel() *model.Transaction {
+	return &model.Transaction{
+		ProductId:      t.ProductId,
+		Quantity:       t.Quantity,
+		Destination:    t.Destination,
+		Weight:         t.Weight,
+		TotalPrice:     t.TotalPrice,
+		CourierCode:    t.Courier.Code,
+		CourierService: t.Courier.Service,
+		CourierCost:    t.Courier.Cost,
+		CourierEst:     t.Courier.Estimation,
+		Status:         "WAITING",
+		BaseModel: model.BaseModel{
+			CreatedAt: time.Now(),
+			UpdatedAt: time.Now(),
+		},
+	}
 }
 
 type UpdateStatTransaction struct {

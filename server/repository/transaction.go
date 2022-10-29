@@ -17,9 +17,24 @@ func NewTransactionRepo(db *gorm.DB) *transactionRepo {
 	}
 }
 
-func (p *transactionRepo) UpdateStatTransaction(transactionId string, transaction *model.Transaction) error {
+func (t *transactionRepo) GetDetailProduct(productId string) (*model.Product, error) {
+	var product model.Product
 
-	if p.db.Model(transaction).Where("id = ?", transactionId).Updates(transaction).RowsAffected == 0 {
+	err := t.db.Where("id = ?", productId).First(&product).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &product, nil
+}
+
+func (t *transactionRepo) ConfirmTransaction(transaction *model.Transaction) error {
+	return t.db.Create(transaction).Error
+}
+
+func (t *transactionRepo) UpdateStatTransaction(transactionId string, transaction *model.Transaction) error {
+
+	if t.db.Model(transaction).Where("id = ?", transactionId).Updates(transaction).RowsAffected == 0 {
 		return errors.New("QUERY_NOT_AFFECTED")
 	}
 
