@@ -37,6 +37,13 @@ func (t *TransactionHandler) UpdateStatTransaction(c *gin.Context) {
 		return
 	}
 
+	err = params.ValidateStatus(req)
+	if err != nil {
+		resp := view.ErrorResponse("STATUS_NOT_VALID", "BAD_REQUEST", http.StatusBadRequest)
+		WriteJsonResponse(c, resp)
+		return
+	}
+
 	resp := t.svc.UpdateStatTransaction(transactionId, &req)
 
 	WriteJsonResponse(c, resp)
