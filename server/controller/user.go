@@ -60,14 +60,13 @@ func (u *UserHandler) Create(ctx *gin.Context) {
 	if err != nil {
 		log.Printf("Error when binding params in create user controller %v\n", err)
 		response := view.ErrorResponse("CREATED_USER_FAIL", "BAD_REQUEST", http.StatusBadRequest)
-		WriteJsonResponse(ctx, response)
-		return
+		WriteErrorJsonResponse(ctx, response)
 	}
 
 	//TODO : validate body request
 
-	response := u.service.CreateUser(&body)
-	WriteJsonResponse(ctx, response)
+	payload := u.service.CreateUser(&body)
+	WriteJsonResponse(ctx, payload)
 }
 
 func (u *UserHandler) AllUsers(ctx *gin.Context) {
@@ -77,8 +76,8 @@ func (u *UserHandler) AllUsers(ctx *gin.Context) {
 	page, _ := strconv.Atoi(pageStr)
 	limit, _ := strconv.Atoi(limitStr)
 
-	response := u.service.GetUsers(page, limit)
-	WriteJsonResponse(ctx, response)
+	payload := u.service.GetUsers(page, limit)
+	WriteJsonResponse(ctx, payload)
 }
 
 func (u *UserHandler) DetailUserByEmail(ctx *gin.Context) {
@@ -89,5 +88,35 @@ func (u *UserHandler) DetailUserByEmail(ctx *gin.Context) {
 	}
 
 	payload := u.service.ShowUserByEmail(email)
+	WriteJsonResponse(ctx, payload)
+}
+
+func (u *UserHandler) DetailUserById(ctx *gin.Context) {
+	id := ctx.GetString("USER_ID")
+	if id == "" {
+		payload := view.ErrorResponse("GET_USER_PROFILE_FAIL", "UNAUTHORIZED", http.StatusUnauthorized)
+		WriteErrorJsonResponse(ctx, payload)
+	}
+
+	payload := u.service.ShowUserById(id)
+	WriteJsonResponse(ctx, payload)
+}
+
+func (u *UserHandler) UpdateUserById(ctx *gin.Context) {
+	id := ctx.GetString("USER_ID")
+	if id == "" {
+		payload := view.ErrorResponse("UPDATE_USER_FAIL", "UNAUTHORIZED", http.StatusUnauthorized)
+		WriteErrorJsonResponse(ctx, payload)
+	}
+
+	var body params.UpdateUser
+	err := ctx.ShouldBindJSON(&body)
+	if err != nil {
+		log.Printf("Error when binding params in update user controller %v\n", err)
+		response := view.ErrorResponse("UPDATE_USER_FAIL", "BAD_REQUEST", http.StatusBadRequest)
+		WriteErrorJsonResponse(ctx, response)
+	}
+
+	payload := u.service.UpdateUser(&body, id)
 	WriteJsonResponse(ctx, payload)
 }

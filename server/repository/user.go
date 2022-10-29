@@ -40,13 +40,6 @@ func (u *userRepo) FindUserByEmail(email string) (*model.User, error) {
 
 func (u *userRepo) GetUsers(page int, limit int) (*[]model.User, error) {
 	var users []model.User
-	if page == 0 {
-		page = 1
-	}
-
-	if limit == 0 {
-		limit = 25
-	}
 
 	offset := (page - 1) * limit
 	err := u.db.Offset(offset).Limit(limit).Find(&users).Error
@@ -58,6 +51,35 @@ func (u *userRepo) GetUsers(page int, limit int) (*[]model.User, error) {
 }
 
 func (u *userRepo) DetailUserById(id string) (*model.User, error) {
-	//TODO : if JWT include id user
-	return nil, nil
+	var user model.User
+	err := u.db.First(&user, "id = ?", id).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+func (u *userRepo) EditUser(user *model.User, id string) error {
+	var updateUser *model.User
+	err := u.db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Find(&updateUser, "id = ?", id).Error; err != nil {
+			return err
+		}
+
+		updateUser.Fullname = user.Fullname
+		updateUser.Gender = user.Gender
+		updateUser.Contact = user.Contact
+		updateUser.Street = user.Street
+		updateUser.CityId = user.CityId
+		updateUser.ProvinceId = user.ProvinceId
+
+		if err := tx.Save(&updateUser).Error; err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	return err
 }

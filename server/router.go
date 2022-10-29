@@ -35,6 +35,8 @@ func (r *Router) Start(port string) {
 	user.POST("/", r.user.Create)
 	user.GET("/", r.user.AllUsers)
 	user.GET("/email/:email", r.user.DetailUserByEmail)
+	user.GET("/profile", r.user.DetailUserById)
+	user.PUT("/profile", r.user.UpdateUserById)
 
 	// Product route
 	product := r.router.Group("/products", r.middleware.Auth)

@@ -114,3 +114,11 @@ func SuccessAllUsersResponse(query *model.Pagination, payload interface{}) *Resp
 		Query:   query,
 	}
 }
+
+func SuccessUserResponse(msg string, statusCode int) *Response {
+	return &Response{
+		Status:      statusCode,
+		Message:     msg,
+		GeneralInfo: "Golang-4-Shop",
+	}
+}
