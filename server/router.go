@@ -10,10 +10,10 @@ type Router struct {
 	router      *gin.Engine
 	user        *controller.UserHandler
 	product     *controller.ProductHandler
-	transaction *controller.TranscationHandler
+	transaction *controller.TransactionHandler
 }
 
-func NewRouter(router *gin.Engine, user *controller.UserHandler, product *controller.ProductHandler, transaction *controller.TranscationHandler) *Router {
+func NewRouter(router *gin.Engine, user *controller.UserHandler, product *controller.ProductHandler, transaction *controller.TransactionHandler) *Router {
 	return &Router{
 		router:      router,
 		user:        user,
@@ -37,5 +37,9 @@ func (r *Router) Start(port string) {
 	product.POST("/", r.product.CreateProduct)
 	product.PUT("/id/:id", r.product.UpdateProduct)
 	product.DELETE("/id/:id", r.product.DeleteProduct)
+
+	transaction := r.router.Group("/transactions")
+	transaction.PUT("/id/:id", r.transaction.UpdateStatTransaction)
+
 	r.router.Run(port)
 }

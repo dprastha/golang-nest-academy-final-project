@@ -24,5 +24,5 @@ type ProductRepo interface {
 }
 
 type TransactionRepo interface {
-	
+	UpdateStatTransaction(transactionId string, transaction *model.Transaction) error
 }
