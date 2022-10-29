@@ -20,6 +20,36 @@ func NewTransactionServices(repo repository.TransactionRepo, rajaongkirAdaptor *
 	}
 }
 
+func (t *TransactionService) InquireTransaction(req *params.InquireTransactions) *view.Response {
+	transaction := req
+
+	product, err := t.repo.GetDetailProduct(transaction.ProductId)
+	if err != nil {
+		return view.ErrorResponse("GET_DETAIL_PRODUCT_FAIL", "NOT_FOUND", http.StatusNotFound)
+	}
+
+	if transaction.Quantity > product.Stock {
+		return view.ErrorResponse("INQUIRY_TRANSACTION_FAIL", "UNPROCESSABLE_ENTITY", http.StatusUnprocessableEntity)
+	}
+
+	payload, err := view.GetInquireDetailsPayload(transaction, product, t.rajaongkirAdaptor)
+	if err != nil {
+		return view.ErrorResponse("GET_DETAIL_COST_COURIER_FAIL", "NOT_FOUND", http.StatusNotFound)
+	}
+
+	return view.SuccessResponse("INQUIRY_TRANSACTION_SUCCESS", payload, http.StatusCreated)
+}
+
+func (t *TransactionService) ConfirmTransaction(req *params.ProductReq) *view.Response {
+	transaction := req.ParseToModel()
+
+	//TODO::Get UserId, and CityId
+
+	//TODO::Get Quantity Product and Update Quantity Product
+
+	return view.SuccessResponse("CONFIRM_TRANSACTION_SUCCESS", transaction, http.StatusCreated)
+}
+
 func (t *TransactionService) UpdateStatTransaction(transactionId string, req *params.UpdateStatTransaction) *view.Response {
 	status := req.ParseToModel()
 
