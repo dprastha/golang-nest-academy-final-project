@@ -40,22 +40,22 @@ func NewRajaOngkirAdaptor(baseUrl string, apiKey string) *RajaOngkirAdaptor {
 	}
 }
 
-func (r *RajaOngkirAdaptor) GetCity(citycode string) (*JSONRecordGet, error) {
+func (r *RajaOngkirAdaptor) GetCity(citycode string) ([]byte, error) {
 	path := fmt.Sprintf("city?id=%v", citycode)
 	data, err := r.client.Get(path)
 	if err != nil {
 		return nil, err
 	}
-	var datas JSONBaseGet
-
-	err = json.Unmarshal(data, &datas)
-	if err != nil {
-		return nil, err
-	}
+	//var datas JSONBaseGet
+	//
+	//err = json.Unmarshal(data, &datas)
+	//if err != nil {
+	//	return nil, err
+	//}
 
 	//fmt.Println(datas)
 
-	return &datas.Rajaongkir, err
+	return data, err
 }
 
 func (r *RajaOngkirAdaptor) GetProvince(provincecode string) (*JSONRecordGet, error) {

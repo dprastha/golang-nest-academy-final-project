@@ -39,3 +39,22 @@ func (u *userRepo) FindUserByEmail(email string) (*model.User, error) {
 
 	return &user, nil
 }
+
+func (u *userRepo) GetUsers(page int, limit int) (*[]model.User, error) {
+	var users []model.User
+	if page == 0 {
+		page = 1
+	}
+
+	if limit == 0 {
+		limit = 25
+	}
+
+	offset := (page - 1) * limit
+	err := u.db.Offset(offset).Limit(limit).Find(&users).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &users, nil
+}

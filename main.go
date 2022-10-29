@@ -23,7 +23,7 @@ func main() {
 	rajaongkirAdaptor := adaptor.NewRajaOngkirAdaptor("https://api.rajaongkir.com/starter", "6d4d26125ea1c2991b801880cf3842f7")
 
 	userRepo := repository.NewUserRepo(db)
-	userService := service.NewUserServices(userRepo)
+	userService := service.NewUserServices(userRepo, *rajaongkirAdaptor)
 	userHandler := controller.NewUserHandler(userService)
 
 	productRepo := repository.NewProductRepo(db)
