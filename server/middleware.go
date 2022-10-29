@@ -3,6 +3,7 @@ package server
 import (
 	"final-project/helper"
 	"final-project/server/controller"
+	"final-project/server/model"
 	"final-project/server/service"
 	"final-project/server/view"
 	"net/http"
@@ -47,4 +48,30 @@ func (m *Middleware) Auth(ctx *gin.Context) {
 
 	// process to another handler
 	ctx.Next()
+}
+
+func (m *Middleware) CheckRole(next gin.HandlerFunc, roles []string) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		email := ctx.GetString("USER_EMAIL")
+		user := m.userService.FindUserByEmail(email)
+		userDetail := user.Payload.(*model.User)
+
+		isExist := false
+
+		for _, role := range roles {
+			if role == userDetail.Role {
+				isExist = true
+				break
+			}
+		}
+
+		if !isExist {
+			resp := view.ErrorResponse("Invalid token", "UNAUTHORIZED", http.StatusUnauthorized)
+			controller.WriteErrorJsonResponse(ctx, resp)
+			return
+		}
+
+		next(ctx)
+	}
+
 }
