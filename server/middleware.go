@@ -36,7 +36,7 @@ func (m *Middleware) Auth(ctx *gin.Context) {
 	token, err := helper.VerifyToken(tokenArr[1])
 	if err != nil {
 		ctx.Set("ERROR", err.Error())
-		resp := view.ErrorResponse("No token provided", "UNAUTHORIZED", http.StatusUnauthorized)
+		resp := view.ErrorResponse("Invalid token", "UNAUTHORIZED", http.StatusUnauthorized)
 		controller.WriteErrorJsonResponse(ctx, resp)
 		return
 	}
