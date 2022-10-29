@@ -1,4 +1,4 @@
-package middleware
+package server
 
 import (
 	"final-project/helper"
@@ -10,17 +10,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type AuthMiddleware struct {
+type Middleware struct {
 	userService *service.UserService
 }
 
-func NewMiddleware(userService *service.UserService) *AuthMiddleware {
-	return &AuthMiddleware{
+func NewMiddleware(userService *service.UserService) *Middleware {
+	return &Middleware{
 		userService: userService,
 	}
 }
 
-func (m *AuthMiddleware) Auth(ctx *gin.Context) {
+func (m *Middleware) Auth(ctx *gin.Context) {
 	bearerToken := ctx.GetHeader("Authorization")
 	tokenArr := strings.Split(bearerToken, "Bearer")
 
