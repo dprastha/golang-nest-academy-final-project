@@ -2,7 +2,6 @@ package repository
 
 import (
 	"final-project/server/model"
-	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -33,7 +32,6 @@ func (u *userRepo) FindUserByEmail(email string) (*model.User, error) {
 	var user model.User
 	err := u.db.Where("email=?", email).First(&user).Error
 	if err != nil {
-		fmt.Println("error here 1")
 		return nil, err
 	}
 

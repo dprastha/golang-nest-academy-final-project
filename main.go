@@ -20,7 +20,7 @@ func main() {
 		panic(err)
 	}
 
-	rajaongkirAdaptor := adaptor.NewRajaOngkirAdaptor("https://api.rajaongkir.com/starter", "6d4d26125ea1c2991b801880cf3842f7")
+	rajaongkirAdaptor := adaptor.NewRajaOngkirAdaptor(config.GetEnvVariable("RAJA_ONGKIR_HOST"), config.GetEnvVariable("RAJA_ONGKIR_API_KEY"))
 
 	userRepo := repository.NewUserRepo(db)
 	userService := service.NewUserServices(userRepo, *rajaongkirAdaptor)
@@ -35,7 +35,9 @@ func main() {
 	transactionHandler := controller.NewTranscationHandler(transactionService)
 
 	router := gin.Default()
-	app := server.NewRouter(router, userHandler, productHandler, transactionHandler)
+	middleware := server.NewMiddleware(userService)
+
+	app := server.NewRouter(router, userHandler, productHandler, transactionHandler, middleware)
 	port := fmt.Sprintf(":%s", config.GetEnvVariable("APP_PORT"))
 
 	app.Start(port)
