@@ -3,6 +3,8 @@ package params
 import (
 	"errors"
 	"final-project/server/model"
+	"reflect"
+	"strings"
 
 	"github.com/go-playground/validator/v10"
 )
@@ -10,20 +12,20 @@ import (
 type User struct {
 	Email      string `json:"email" validate:"required,email"`
 	Fullname   string `json:"fullname" validate:"required,min=3,max=50"`
-	Gender     string `json:"gender" validate:"required"`
-	Contact    string `json:"contact" validate:"required"`
-	Street     string `json:"street" validate:"required"`
-	CityId     string `json:"city_id" validate:"required"`
-	ProvinceId string `json:"province_id" validate:"required"`
+	Gender     string `json:"gender" validate:"required,min=1"`
+	Contact    string `json:"contact" validate:"required,min=12"`
+	Street     string `json:"street" validate:"required,min=3"`
+	CityId     string `json:"city_id" validate:"required,min=1"`
+	ProvinceId string `json:"province_id" validate:"required,min=1"`
 }
 
 type UpdateUser struct {
 	Fullname   string `json:"fullname" validate:"required,min=3,max=50"`
-	Gender     string `json:"gender" validate:"required"`
-	Contact    string `json:"contact" validate:"required"`
-	Street     string `json:"street" validate:"required"`
-	CityId     string `json:"city_id" validate:"required"`
-	ProvinceId string `json:"province_id" validate:"required"`
+	Gender     string `json:"gender" validate:"required,min=1"`
+	Contact    string `json:"contact" validate:"required,min=12"`
+	Street     string `json:"street" validate:"required,min=3"`
+	CityId     string `json:"city_id" validate:"required,min=1"`
+	ProvinceId string `json:"province_id" validate:"required,min=1"`
 }
 
 type UserRegister struct {
@@ -88,4 +90,28 @@ func (u *UpdateUser) ParseUpdateToModelUser() (*model.User, error) {
 	}
 
 	return user, nil
+}
+
+func ValidateRequestUser(body interface{}) ([]string, error) {
+	validate := validator.New()
+	validate.RegisterTagNameFunc(func(fld reflect.StructField) string {
+		name := strings.SplitN(fld.Tag.Get("json"), ",", 2)[0]
+
+		if name == "-" {
+			return ""
+		}
+
+		return name
+	})
+	err := validate.Struct(body)
+	if err != nil {
+		var errString []string
+		for _, err := range err.(validator.ValidationErrors) {
+			errString = append(errString, err.Field()+" is "+err.Tag())
+		}
+
+		return errString, err
+	}
+
+	return nil, nil
 }

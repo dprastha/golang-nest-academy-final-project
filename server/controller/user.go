@@ -4,11 +4,10 @@ import (
 	"final-project/server/params"
 	"final-project/server/service"
 	"final-project/server/view"
+	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
 	"strconv"
-
-	"github.com/gin-gonic/gin"
 )
 
 type UserHandler struct {
@@ -61,9 +60,15 @@ func (u *UserHandler) Create(ctx *gin.Context) {
 		log.Printf("Error when binding params in create user controller %v\n", err)
 		response := view.ErrorResponse("CREATED_USER_FAIL", "BAD_REQUEST", http.StatusBadRequest)
 		WriteErrorJsonResponse(ctx, response)
+		return
 	}
 
-	//TODO : validate body request
+	errString, err := params.ValidateRequestUser(&body)
+	if err != nil {
+		payload := view.ErrorValidationUserResponse("CREATED_USER_FAIL", gin.H{"message": errString}, http.StatusUnprocessableEntity)
+		WriteErrorJsonResponse(ctx, payload)
+		return
+	}
 
 	payload := u.service.CreateUser(&body)
 	WriteJsonResponse(ctx, payload)
@@ -85,6 +90,7 @@ func (u *UserHandler) DetailUserByEmail(ctx *gin.Context) {
 	if email == "" {
 		payload := view.ErrorResponse("GET_USER_BY_EMAIL_FAIL", "NOT_FOUND", http.StatusNotFound)
 		WriteErrorJsonResponse(ctx, payload)
+		return
 	}
 
 	payload := u.service.ShowUserByEmail(email)
@@ -96,6 +102,7 @@ func (u *UserHandler) DetailUserById(ctx *gin.Context) {
 	if id == "" {
 		payload := view.ErrorResponse("GET_USER_PROFILE_FAIL", "UNAUTHORIZED", http.StatusUnauthorized)
 		WriteErrorJsonResponse(ctx, payload)
+		return
 	}
 
 	payload := u.service.ShowUserById(id)
@@ -107,14 +114,23 @@ func (u *UserHandler) UpdateUserById(ctx *gin.Context) {
 	if id == "" {
 		payload := view.ErrorResponse("UPDATE_USER_FAIL", "UNAUTHORIZED", http.StatusUnauthorized)
 		WriteErrorJsonResponse(ctx, payload)
+		return
 	}
 
 	var body params.UpdateUser
 	err := ctx.ShouldBindJSON(&body)
 	if err != nil {
 		log.Printf("Error when binding params in update user controller %v\n", err)
-		response := view.ErrorResponse("UPDATE_USER_FAIL", "BAD_REQUEST", http.StatusBadRequest)
-		WriteErrorJsonResponse(ctx, response)
+		payload := view.ErrorResponse("UPDATE_USER_FAIL", "BAD_REQUEST", http.StatusBadRequest)
+		WriteErrorJsonResponse(ctx, payload)
+		return
+	}
+
+	errString, err := params.ValidateRequestUser(&body)
+	if err != nil {
+		payload := view.ErrorValidationUserResponse("UPDATE_USER_FAIL", gin.H{"message": errString}, http.StatusUnprocessableEntity)
+		WriteErrorJsonResponse(ctx, payload)
+		return
 	}
 
 	payload := u.service.UpdateUser(&body, id)

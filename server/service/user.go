@@ -111,7 +111,7 @@ func (u *UserService) CreateUser(request *params.User) *view.Response {
 	user.CreatedAt = time.Now()
 	user.UpdatedAt = time.Now()
 	// TODO: change to dynamic
-	user.Role = "kasir"
+	user.Role = "cashier"
 
 	hashedPassword, err := helper.GeneratePassword("default")
 	if err != nil {

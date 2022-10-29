@@ -123,3 +123,13 @@ func SuccessUserResponse(msg string, statusCode int) *Response {
 		GeneralInfo: "Golang-4-Shop",
 	}
 }
+
+func ErrorValidationUserResponse(msg string, info gin.H, statusCode int) *Response {
+	return &Response{
+		Status:      statusCode,
+		Message:     msg,
+		Error:       "BAD_REQUEST",
+		AddInfo:     info,
+		GeneralInfo: "Golang-4-Shop",
+	}
+}
