@@ -1,6 +1,7 @@
 package server
 
 import (
+	"final-project/enums"
 	"final-project/server/controller"
 
 	"github.com/gin-gonic/gin"
@@ -32,21 +33,21 @@ func (r *Router) Start(port string) {
 
 	// User route
 	user := r.router.Group("/users", r.middleware.Auth)
-	user.POST("/", r.user.Create)
-	user.GET("/", r.user.AllUsers)
-	user.GET("/email/:email", r.user.DetailUserByEmail)
+	user.POST("/", r.middleware.CheckRole(r.user.Create, []string{enums.Admin}))
+	user.GET("/", r.middleware.CheckRole(r.user.AllUsers, []string{enums.Admin}))
+	user.GET("/email/:email", r.middleware.CheckRole(r.user.DetailUserByEmail, []string{enums.Admin}))
 
 	// Product route
 	product := r.router.Group("/products", r.middleware.Auth)
-	product.GET("/", r.product.GetAllProducts)
-	product.GET("/id/:id", r.product.GetProductById)
-	product.POST("/", r.product.CreateProduct)
-	product.PUT("/id/:id", r.product.UpdateProduct)
-	product.DELETE("/id/:id", r.product.DeleteProduct)
+	product.GET("/", r.middleware.CheckRole(r.product.GetAllProducts, []string{enums.Admin, enums.User}))
+	product.GET("/id/:id", r.middleware.CheckRole(r.product.GetProductById, []string{enums.Admin, enums.User}))
+	product.POST("/", r.middleware.CheckRole(r.product.CreateProduct, []string{enums.Admin}))
+	product.PUT("/id/:id", r.middleware.CheckRole(r.product.UpdateProduct, []string{enums.Admin}))
+	product.DELETE("/id/:id", r.middleware.CheckRole(r.product.DeleteProduct, []string{enums.Admin}))
 
 	// Transaction route
 	transaction := r.router.Group("/transactions", r.middleware.Auth)
-	transaction.PUT("/id/:id", r.transaction.UpdateStatTransaction)
+	transaction.PUT("/id/:id", r.middleware.CheckRole(r.transaction.UpdateStatTransaction, []string{enums.Admin, enums.Cashier}))
 
 	r.router.Run(port)
 }
