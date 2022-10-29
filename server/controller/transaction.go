@@ -1,13 +1,43 @@
 package controller
 
-import "final-project/server/service"
+import (
+	"final-project/server/params"
+	"final-project/server/service"
+	"final-project/server/view"
+	"net/http"
 
-type TranscationHandler struct {
+	"github.com/gin-gonic/gin"
+)
+
+type TransactionHandler struct {
 	svc *service.TransactionService
 }
 
-func NewTranscationHandler(svc *service.TransactionService) *TranscationHandler {
-	return &TranscationHandler{
+func NewTranscationHandler(svc *service.TransactionService) *TransactionHandler {
+	return &TransactionHandler{
 		svc: svc,
 	}
+}
+
+func (t *TransactionHandler) UpdateStatTransaction(c *gin.Context) {
+	//get productId
+	transactionId, isExist := c.Params.Get("id")
+
+	if !isExist {
+		WriteJsonResponse(c, view.ErrorResponse("UPDATE_STATUS_TRANSACTION_FAIL", "BAD_REQUEST", http.StatusBadRequest))
+		return
+	}
+
+	//getting and binding data update
+	var req params.UpdateStatTransaction
+
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		WriteJsonResponse(c, view.ErrorResponse("UPDATE_STATUS_TRANSACTION__FAIL", "BAD_REQUEST", http.StatusBadRequest))
+		return
+	}
+
+	resp := t.svc.UpdateStatTransaction(transactionId, &req)
+
+	WriteJsonResponse(c, resp)
 }
