@@ -35,10 +35,11 @@ CREATE TABLE `transactions` (
   `quantity` int,
   `weight` int,
   `total_price` int,
-  `courier` varchar(255),
-  `courier_cost` double,
-  `status` varchar(255),
+  `courier_code` varchar(255),
+  `courier_service` varchar(255),
+  `courier_cost` int,
   `estimation_arrived` varchar(255),
+  `status` varchar(255),
   `created_at` timestamp,
   `updated_at` timestamp
 );

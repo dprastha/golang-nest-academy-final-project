@@ -19,6 +19,34 @@ func NewTranscationHandler(svc *service.TransactionService) *TransactionHandler 
 	}
 }
 
+func (t *TransactionHandler) InquireTransaction(c *gin.Context) {
+	var req params.InquireTransactions
+
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		WriteJsonResponse(c, view.ErrorResponse("INQUIRY_TRANSACTION_FAIL", "BAD_REQUEST", http.StatusBadRequest))
+		return
+	}
+
+	resp := t.svc.InquireTransaction(&req)
+
+	WriteJsonResponse(c, resp)
+}
+
+func (t *TransactionHandler) ConfirmTransaction(c *gin.Context) {
+	var req params.ProductReq
+
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		WriteJsonResponse(c, view.ErrorResponse("CONFIRM_TRANSACTION_FAIL", "BAD_REQUEST", http.StatusBadRequest))
+		return
+	}
+
+	resp := t.svc.ConfirmTransaction(&req)
+
+	WriteJsonResponse(c, resp)
+}
+
 func (t *TransactionHandler) UpdateStatTransaction(c *gin.Context) {
 	//get productId
 	transactionId, isExist := c.Params.Get("id")
