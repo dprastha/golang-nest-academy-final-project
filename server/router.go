@@ -36,8 +36,8 @@ func (r *Router) Start(port string) {
 	user.POST("/", r.middleware.CheckRole(r.user.Create, []string{enums.Admin}))
 	user.GET("/", r.middleware.CheckRole(r.user.AllUsers, []string{enums.Admin}))
 	user.GET("/email/:email", r.middleware.CheckRole(r.user.DetailUserByEmail, []string{enums.Admin}))
-	user.GET("/profile", r.user.DetailUserById)
-	user.PUT("/profile", r.user.UpdateUserById)
+	user.GET("/profile", r.middleware.CheckRole(r.user.DetailUserById, []string{enums.User}))
+	user.PUT("/profile", r.middleware.CheckRole(r.user.UpdateUserById, []string{enums.User}))
 
 	// Product route
 	product := r.router.Group("/products", r.middleware.Auth)
