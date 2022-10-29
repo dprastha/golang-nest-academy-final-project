@@ -132,7 +132,7 @@ func (u *UserService) GetUsers(page int, limit int) *view.Response {
 
 func (u *UserService) ShowUserByEmail(email string) *view.Response {
 	user, err := u.repo.FindUserByEmail(email)
-	if err != nil {
+	if err == gorm.ErrRecordNotFound {
 		log.Printf("Error when try to get user by email %v\n", err)
 		return view.ErrorResponse("GET_USER_BY_EMAIL_FAIL", "NOT_FOUND", http.StatusNotFound)
 	}
