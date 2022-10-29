@@ -4,9 +4,10 @@ import (
 	"encoding/json"
 	"final-project/adaptor"
 	"final-project/server/model"
-	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type DetailUsers struct {

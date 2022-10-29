@@ -80,9 +80,11 @@ func (u *UserService) Login(req *params.UserLogin) *view.Response {
 		return view.ErrorResponse("Failed to login", "INTERNAL_SERVER_ERROR", http.StatusInternalServerError)
 	}
 
-	user.AccessToken = tokenString
+	tokenResponse := map[string]string{
+		"token": tokenString,
+	}
 
-	return view.SuccessResponse("Succes login", user, http.StatusOK)
+	return view.SuccessResponse("Succes login", tokenResponse, http.StatusOK)
 }
 
 func (u *UserService) FindUserByEmail(email string) *view.Response {
