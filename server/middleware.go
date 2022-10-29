@@ -66,7 +66,7 @@ func (m *Middleware) CheckRole(next gin.HandlerFunc, roles []string) gin.Handler
 		}
 
 		if !isExist {
-			resp := view.ErrorResponse("Invalid token", "UNAUTHORIZED", http.StatusUnauthorized)
+			resp := view.ErrorResponse("Invalid role", "UNAUTHORIZED", http.StatusUnauthorized)
 			controller.WriteErrorJsonResponse(ctx, resp)
 			return
 		}
