@@ -52,7 +52,7 @@ func (u *UserService) Register(req *params.UserRegister) *view.Response {
 		return view.ErrorResponse("Failed to register", "INTERNAL_SERVER_ERROR", http.StatusInternalServerError)
 	}
 
-	return view.SuccessResponse("Success Register", user, http.StatusCreated)
+	return view.SuccessUserResponse("Success Register", http.StatusCreated)
 }
 
 func (u *UserService) Login(req *params.UserLogin) *view.Response {
