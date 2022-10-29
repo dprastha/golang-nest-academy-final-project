@@ -80,3 +80,14 @@ func (u *UserHandler) AllUsers(ctx *gin.Context) {
 	response := u.service.GetUsers(page, limit)
 	WriteJsonResponse(ctx, response)
 }
+
+func (u *UserHandler) DetailUserByEmail(ctx *gin.Context) {
+	email := ctx.Param("email")
+	if email == "" {
+		payload := view.ErrorResponse("GET_USER_BY_EMAIL_FAIL", "NOT_FOUND", http.StatusNotFound)
+		WriteErrorJsonResponse(ctx, payload)
+	}
+
+	payload := u.service.ShowUserByEmail(email)
+	WriteJsonResponse(ctx, payload)
+}

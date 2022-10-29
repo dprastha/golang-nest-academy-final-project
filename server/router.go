@@ -31,6 +31,7 @@ func (r *Router) Start(port string) {
 	user := r.router.Group("/users")
 	user.POST("/", r.user.Create)
 	user.GET("/", r.user.AllUsers)
+	user.GET("/email/:email", r.user.DetailUserByEmail)
 
 	product := r.router.Group("/products")
 	product.GET("/", r.product.GetAllProducts)

@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-type AllUsers struct {
+type DetailUsers struct {
 	Id       string      `json:"id"`
 	Fullname string      `json:"fullname"`
 	Address  interface{} `json:"address"`
@@ -27,15 +27,15 @@ type AddressDetail struct {
 	Name string `json:"name"`
 }
 
-func NewAllUsers(users *[]model.User, rajaOngkir *adaptor.RajaOngkirAdaptor) ([]AllUsers, error) {
-	var newUsers []AllUsers
+func NewAllUsers(users *[]model.User, rajaOngkir *adaptor.RajaOngkirAdaptor) ([]DetailUsers, error) {
+	var newUsers []DetailUsers
 
 	for _, user := range *users {
 		detailAddress, err := getDetailAddress(&user, rajaOngkir)
 		if err != nil {
 			return nil, err
 		}
-		newUsers = append(newUsers, AllUsers{
+		newUsers = append(newUsers, DetailUsers{
 			Id:       user.Id,
 			Fullname: user.Fullname,
 			Auth:     gin.H{"email": user.Email},
@@ -46,34 +46,64 @@ func NewAllUsers(users *[]model.User, rajaOngkir *adaptor.RajaOngkirAdaptor) ([]
 	return newUsers, nil
 }
 
-func getDetailAddress(user *model.User, rajaOngkir *adaptor.RajaOngkirAdaptor) (*Address, error) {
-	city, err := rajaOngkir.GetCity(user.CityId)
+func NewUsers(user *model.User, rajaOngkir *adaptor.RajaOngkirAdaptor) (*DetailUsers, error) {
+	detailAddress, err := getDetailAddress(user, rajaOngkir)
 	if err != nil {
-		log.Printf("Error when get city from adaptor %v\n", err)
 		return nil, err
 	}
 
-	var jsonCity map[string]interface{}
-	err = json.Unmarshal(city, &jsonCity)
-	if err != nil {
-		log.Printf("Error when unmarshal city from adaptor %v\n", err)
-		return nil, err
-	}
-
-	resp := jsonCity["rajaongkir"].(map[string]interface{})
-	result := resp["results"].(map[string]interface{})
-
-	return &Address{
-		Street: user.Street,
-		City: AddressDetail{
-			Id:   result["city_id"].(string),
-			Name: result["city_name"].(string),
-		},
-		Province: AddressDetail{
-			Id:   result["province_id"].(string),
-			Name: result["province"].(string),
-		},
+	return &DetailUsers{
+		Id:       user.Id,
+		Fullname: user.Fullname,
+		Auth:     gin.H{"email": user.Email},
+		Address:  detailAddress,
 	}, nil
+}
+
+func getDetailAddress(user *model.User, rajaOngkir *adaptor.RajaOngkirAdaptor) (*Address, error) {
+	if user.CityId != "" && user.CityId != "0" {
+		city, err := rajaOngkir.GetCity(user.CityId)
+		if err != nil {
+			log.Printf("Error when get city from adaptor %v\n", err)
+			return nil, err
+		}
+
+		var jsonCity map[string]interface{}
+		err = json.Unmarshal(city, &jsonCity)
+		if err != nil {
+			log.Printf("Error when unmarshal city from adaptor %v\n", err)
+			return nil, err
+		}
+
+		resp := jsonCity["rajaongkir"].(map[string]interface{})
+		result := resp["results"].(map[string]interface{})
+
+		detailAddress := &Address{
+			Street: user.Street,
+			City: AddressDetail{
+				Id:   result["city_id"].(string),
+				Name: result["city_name"].(string),
+			},
+			Province: AddressDetail{
+				Id:   result["province_id"].(string),
+				Name: result["province"].(string),
+			},
+		}
+		return detailAddress, nil
+	} else {
+		detailAddress := &Address{
+			Street: user.Street,
+			City: AddressDetail{
+				Id:   "",
+				Name: "",
+			},
+			Province: AddressDetail{
+				Id:   "",
+				Name: "",
+			},
+		}
+		return detailAddress, nil
+	}
 }
 
 func SuccessAllUsersResponse(query *model.Pagination, payload interface{}) *Response {
