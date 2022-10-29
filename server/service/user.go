@@ -2,7 +2,9 @@ package service
 
 import (
 	"database/sql"
+	"final-project/adaptor"
 	"final-project/helper"
+	"final-project/server/model"
 	"final-project/server/params"
 	"final-project/server/repository"
 	"final-project/server/view"
@@ -15,12 +17,14 @@ import (
 )
 
 type UserService struct {
-	repo repository.UserRepo
+	repo       repository.UserRepo
+	rajaOngkir adaptor.RajaOngkirAdaptor
 }
 
-func NewUserServices(repo repository.UserRepo) *UserService {
+func NewUserServices(repo repository.UserRepo, rajaOngkir adaptor.RajaOngkirAdaptor) *UserService {
 	return &UserService{
-		repo: repo,
+		repo:       repo,
+		rajaOngkir: rajaOngkir,
 	}
 }
 
@@ -110,8 +114,30 @@ func (u *UserService) CreateUser(request *params.User) *view.Response {
 	err = u.repo.Register(user)
 	if err != nil {
 		log.Printf("Error when create in repository to user model %v\n", err)
-		return view.ErrorResponse("CREATED_USER_FAIL", "BAD_REQUEST", http.StatusBadRequest)
+		return view.ErrorResponse("CREATED_USER_FAIL", "INTERNAL_SERVER_ERROR", http.StatusInternalServerError)
 	}
 
 	return view.SuccessResponse("CREATED_USER_SUCCESS", user, http.StatusCreated)
+}
+
+func (u *UserService) GetUsers(page int, limit int) *view.Response {
+	users, err := u.repo.GetUsers(page, limit)
+	if err != nil {
+		log.Printf("Error when find all users in service get users %v\n", err)
+		return view.ErrorResponse("GET_ALL_USERS_FAIL", "INTERNAL_SERVER_ERROR", http.StatusInternalServerError)
+	}
+
+	payload, err := view.NewAllUsers(users, &u.rajaOngkir)
+	if err != nil {
+		log.Printf("Error when try to hit raja ongkir in service get users %v\n", err)
+		return view.ErrorResponse("GET_ALL_USERS_FAIL", "INTERNAL_SERVER_ERROR", http.StatusInternalServerError)
+	}
+
+	query := &model.Pagination{
+		Limit: limit,
+		Page:  page,
+		Total: len(*users),
+	}
+
+	return view.SuccessAllUsersResponse(query, payload)
 }
