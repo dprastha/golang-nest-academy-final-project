@@ -6,6 +6,7 @@ import (
 	"final-project/server/view"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -53,16 +54,29 @@ func (u *UserHandler) Login(ctx *gin.Context) {
 	WriteJsonResponse(ctx, resp)
 }
 
-func (u *UserHandler) Create(c *gin.Context) {
+func (u *UserHandler) Create(ctx *gin.Context) {
 	var body params.User
-	err := c.ShouldBindJSON(&body)
+	err := ctx.ShouldBindJSON(&body)
 	if err != nil {
 		log.Printf("Error when binding params in create user controller %v\n", err)
 		response := view.ErrorResponse("CREATED_USER_FAIL", "BAD_REQUEST", http.StatusBadRequest)
-		WriteJsonResponse(c, response)
+		WriteJsonResponse(ctx, response)
 		return
 	}
 
+	//TODO : validate body request
+
 	response := u.service.CreateUser(&body)
-	WriteJsonResponse(c, response)
+	WriteJsonResponse(ctx, response)
+}
+
+func (u *UserHandler) AllUsers(ctx *gin.Context) {
+	pageStr := ctx.Request.URL.Query().Get("page")
+	limitStr := ctx.Request.URL.Query().Get("limit")
+
+	page, _ := strconv.Atoi(pageStr)
+	limit, _ := strconv.Atoi(limitStr)
+
+	response := u.service.GetUsers(page, limit)
+	WriteJsonResponse(ctx, response)
 }
