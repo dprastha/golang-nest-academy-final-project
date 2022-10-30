@@ -22,15 +22,12 @@ type ConfirmTransaction struct {
 	Quantity    int            `json:"quantity"`
 	Destination string         `json:"destination"`
 	Weight      int            `json:"weight"`
-	TotalPrice  int            `json:"total_price"`
 	Courier     ConfirmCourier `json:"courier"`
 }
 
 type ConfirmCourier struct {
-	Code       string `json:"code"`
-	Service    string `json:"service"`
-	Cost       int    `json:"cost"`
-	Estimation string `json:"estimation"`
+	Code    string `json:"code"`
+	Service string `json:"service"`
 }
 
 func (t *ConfirmTransaction) ParseToModel() *model.Transaction {
@@ -39,11 +36,8 @@ func (t *ConfirmTransaction) ParseToModel() *model.Transaction {
 		Quantity:       t.Quantity,
 		Destination:    t.Destination,
 		Weight:         t.Weight,
-		TotalPrice:     t.TotalPrice,
 		CourierCode:    t.Courier.Code,
 		CourierService: t.Courier.Service,
-		CourierCost:    t.Courier.Cost,
-		CourierEst:     t.Courier.Estimation,
 		Status:         "WAITING",
 		BaseModel: model.BaseModel{
 			CreatedAt: time.Now(),

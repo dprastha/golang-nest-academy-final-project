@@ -97,6 +97,7 @@ func (t *TransactionService) ConfirmTransaction(req *params.ConfirmTransaction, 
 	// Create transaction
 	transaction.UserId = user.Id
 	transaction.ProductId = product.Id
+	transaction.TotalPrice = (product.Price * req.Quantity) + servicesCost[0]
 	transaction.CourierCost = servicesCost[0]
 	transaction.EstArrived = estimationArrived[0]
 
