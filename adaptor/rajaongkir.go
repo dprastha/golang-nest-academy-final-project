@@ -9,6 +9,32 @@ type RajaOngkirAdaptor struct {
 	client *httpclient.Client
 }
 
+type RajaOngkirResponse struct {
+	Rajaongkir ResultResponse `json:"rajaongkir"`
+}
+
+type ResultResponse struct {
+	Result CourierService `json:"result"`
+}
+
+type CourierService struct {
+	Code        string `json:"code"`
+	Name        string `json:"name"`
+	CourierCost *[]CourierCost
+}
+
+type CourierCost struct {
+	Service     string `json:"service"`
+	Description string `json:"description"`
+	ServiceCost *[]ServiceCost
+}
+
+type ServiceCost struct {
+	Value int    `json:"value"`
+	Etd   string `json:"etd"`
+	Note  string `json:"note"`
+}
+
 func NewRajaOngkirAdaptor(baseUrl string, apiKey string) *RajaOngkirAdaptor {
 	client := httpclient.NewHttpClient(baseUrl, apiKey)
 

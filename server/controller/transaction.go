@@ -33,18 +33,24 @@ func (t *TransactionHandler) InquireTransaction(c *gin.Context) {
 	WriteJsonResponse(c, resp)
 }
 
-func (t *TransactionHandler) ConfirmTransaction(c *gin.Context) {
-	var req params.ProductReq
-
-	err := c.ShouldBindJSON(&req)
-	if err != nil {
-		WriteJsonResponse(c, view.ErrorResponse("CONFIRM_TRANSACTION_FAIL", "BAD_REQUEST", http.StatusBadRequest))
+func (t *TransactionHandler) ConfirmTransaction(ctx *gin.Context) {
+	var req params.ConfirmTransaction
+	userId := ctx.GetString("USER_ID")
+	if userId == "" {
+		payload := view.ErrorResponse("CONFIRM_TRANSACTION_FAIL", "UNAUTHORIZED", http.StatusUnauthorized)
+		WriteErrorJsonResponse(ctx, payload)
 		return
 	}
 
-	resp := t.svc.ConfirmTransaction(&req)
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		WriteJsonResponse(ctx, view.ErrorResponse("CONFIRM_TRANSACTION_FAIL", "BAD_REQUEST", http.StatusBadRequest))
+		return
+	}
 
-	WriteJsonResponse(c, resp)
+	resp := t.svc.ConfirmTransaction(&req, userId)
+
+	WriteJsonResponse(ctx, resp)
 }
 
 func (t *TransactionHandler) UpdateStatTransaction(c *gin.Context) {

@@ -51,6 +51,7 @@ func (r *Router) Start(port string) {
 	transaction := r.router.Group("/transactions", r.middleware.Auth)
 	transaction.POST("/inquire", r.middleware.CheckRole(r.transaction.InquireTransaction, []string{enums.User}))
 	transaction.PUT("/id/:id", r.middleware.CheckRole(r.transaction.UpdateStatTransaction, []string{enums.Admin, enums.Cashier}))
+	transaction.POST("/confirm", r.middleware.CheckRole(r.transaction.ConfirmTransaction, []string{enums.User}))
 
 	r.router.Run(port)
 }

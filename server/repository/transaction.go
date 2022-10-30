@@ -28,10 +28,6 @@ func (t *transactionRepo) GetDetailProduct(productId string) (*model.Product, er
 	return &product, nil
 }
 
-func (t *transactionRepo) ConfirmTransaction(transaction *model.Transaction) error {
-	return t.db.Create(transaction).Error
-}
-
 func (t *transactionRepo) UpdateStatTransaction(transactionId string, transaction *model.Transaction) error {
 
 	if t.db.Model(transaction).Where("id = ?", transactionId).Updates(transaction).RowsAffected == 0 {
@@ -39,4 +35,18 @@ func (t *transactionRepo) UpdateStatTransaction(transactionId string, transactio
 	}
 
 	return nil
+}
+
+func (t *transactionRepo) ConfirmTransaction(transaction *model.Transaction) error {
+	var confirmTransaction *model.Transaction
+	err := t.db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Create(&confirmTransaction).Error; err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	return err
+
 }

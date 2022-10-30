@@ -93,3 +93,18 @@ func (t *UpdateStatTransaction) ParseToModel() *model.Transaction {
 		Status: t.Status,
 	}
 }
+
+func ValidateConfirmTransaction(u interface{}) ([]string, error) {
+	err := validator.New().Struct(u)
+
+	if err != nil {
+		var errString []string
+		for _, err := range err.(validator.ValidationErrors) {
+			errString = append(errString, err.Field()+" is "+err.Tag())
+		}
+
+		return errString, err
+	}
+
+	return nil, nil
+}
