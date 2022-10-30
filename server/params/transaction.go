@@ -22,15 +22,12 @@ type ConfirmTransaction struct {
 	Quantity    int            `json:"quantity"`
 	Destination string         `json:"destination"`
 	Weight      int            `json:"weight"`
-	TotalPrice  int            `json:"total_price"`
 	Courier     ConfirmCourier `json:"courier"`
 }
 
 type ConfirmCourier struct {
-	Code       string `json:"code"`
-	Service    string `json:"service"`
-	Cost       int    `json:"cost"`
-	Estimation string `json:"estimation"`
+	Code    string `json:"code"`
+	Service string `json:"service"`
 }
 
 func (t *ConfirmTransaction) ParseToModel() *model.Transaction {
@@ -39,11 +36,8 @@ func (t *ConfirmTransaction) ParseToModel() *model.Transaction {
 		Quantity:       t.Quantity,
 		Destination:    t.Destination,
 		Weight:         t.Weight,
-		TotalPrice:     t.TotalPrice,
 		CourierCode:    t.Courier.Code,
 		CourierService: t.Courier.Service,
-		CourierCost:    t.Courier.Cost,
-		CourierEst:     t.Courier.Estimation,
 		Status:         "WAITING",
 		BaseModel: model.BaseModel{
 			CreatedAt: time.Now(),
@@ -92,4 +86,19 @@ func (t *UpdateStatTransaction) ParseToModel() *model.Transaction {
 	return &model.Transaction{
 		Status: t.Status,
 	}
+}
+
+func ValidateConfirmTransaction(u interface{}) ([]string, error) {
+	err := validator.New().Struct(u)
+
+	if err != nil {
+		var errString []string
+		for _, err := range err.(validator.ValidationErrors) {
+			errString = append(errString, err.Field()+" is "+err.Tag())
+		}
+
+		return errString, err
+	}
+
+	return nil, nil
 }
