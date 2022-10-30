@@ -68,7 +68,7 @@ func (t *TransactionService) ConfirmTransaction(req *params.ConfirmTransaction, 
 	// Get cost
 	getCost, err := GetCost(req, user.CityId, t.rajaongkirAdaptor)
 	if err != nil {
-		return view.ErrorResponse("GET_DETAIL_COST_COURIER_FAIL", "NOT_FOUND", http.StatusNotFound)
+		return view.ErrorResponse("GET_DETAIL_COURIER_FAIL", "NOT_FOUND", http.StatusNotFound)
 	}
 
 	// Get courier service cost
@@ -125,7 +125,7 @@ func GetCost(req *params.ConfirmTransaction, cityId string, rajaOngkir *adaptor.
 		"origin":      cityId,
 		"destination": req.Destination,
 		"weight":      req.Weight,
-		"courier":     req.Courier,
+		"courier":     req.Courier.Code,
 	}
 
 	cost, err := rajaOngkir.PostCost(payload)
