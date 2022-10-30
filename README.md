@@ -20,6 +20,8 @@
 
 ## API Documentation
 
+https://documenter.getpostman.com/view/13334944/2s8YKJBf8b
+
 ## ERD
 
 https://dbdiagram.io/d/63574deefa2755667d653c2b
