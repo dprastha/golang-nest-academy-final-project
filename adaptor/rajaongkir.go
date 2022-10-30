@@ -14,19 +14,19 @@ type RajaOngkirResponse struct {
 }
 
 type ResultResponse struct {
-	Result CourierService `json:"result"`
+	Result CourierService `json:"results"`
 }
 
 type CourierService struct {
-	Code        string `json:"code"`
-	Name        string `json:"name"`
-	CourierCost *[]CourierCost
+	Code        string         `json:"code"`
+	Name        string         `json:"name"`
+	CourierCost *[]CourierCost `json:"costs"`
 }
 
 type CourierCost struct {
-	Service     string `json:"service"`
-	Description string `json:"description"`
-	ServiceCost *[]ServiceCost
+	Service     string         `json:"service"`
+	Description string         `json:"description"`
+	ServiceCost *[]ServiceCost `json:"cost"`
 }
 
 type ServiceCost struct {
